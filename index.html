@@ -286,7 +286,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
 <main class="wrap">
 <section id="view-home" aria-labelledby="h-home">
   <div class="cta-wrap">
-    <button type="button" class="btn-hero" id="btnAddClient"><span aria-hidden="true">+</span> Add new client</button>
+    <button type="button" class="btn-hero" id="btnAddClient">Search Resources</button>
     <p class="cta-note">Takes about 5 minutes with the client on the phone or in person.</p>
   </div>
   <h2 class="sec" id="h-home" style="margin-top:34px">What this does</h2>
@@ -296,8 +296,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
     <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><circle cx="10" cy="10" r="6" fill="#ffd23f"/><circle cx="10" cy="24" r="6" fill="#4cc9f0"/><circle cx="10" cy="38" r="6" fill="#5bd1a0"/><path d="M20 10h22M20 24h22M20 38h16" stroke="#9fb3cc" stroke-width="3.5" stroke-linecap="round"/></svg></div><h3>Builds a Help Action Plan</h3><p>Matches the client to the programs that serve their county and situation, in the order to call them: today, this week, filling the gap, and staying ahead.</p></article>
     <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#3a3214"/><path d="M17 12c2 0 3 4 4 6s-2 3-2 4c1 3 4 6 7 7 1 0 2-3 4-2s6 2 6 4-3 6-6 6C20 37 11 28 11 18c0-3 3-6 6-6z" fill="#ffd23f"/></svg></div><h3>Shows who to call and what to bring</h3><p>Every program comes with its phone number, who qualifies, the documents to have ready, and notes from DRR partners.</p></article>
     <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><rect x="4" y="10" width="40" height="28" rx="5" fill="#4cc9f0"/><path d="M6 13l18 14 18-14" stroke="#0b1626" stroke-width="3.5" fill="none" stroke-linejoin="round"/><rect x="28" y="26" width="16" height="20" rx="2" fill="#ffd23f"/><text x="36" y="40" text-anchor="middle" font-size="8" font-weight="800" fill="#0b1626" font-family="Arial">PDF</text></svg></div><h3>Emails the plan as a PDF</h3><p>Send the full intake to an agency with the client's consent, or a plan-only copy to the client. Or save it as a Gmail draft first.</p></article>
-    <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><ellipse cx="24" cy="11" rx="16" ry="6" fill="#5bd1a0"/><path d="M8 11v26c0 3.3 7.2 6 16 6s16-2.7 16-6V11" fill="#163d30" stroke="#5bd1a0" stroke-width="2.5"/><path d="M8 20c0 3.3 7.2 6 16 6s16-2.7 16-6M8 29c0 3.3 7.2 6 16 6s16-2.7 16-6" stroke="#5bd1a0" stroke-width="2.5" fill="none"/></svg></div><h3>Saves to Airtable</h3><p>Creates a record in the Navigator Intakes table with every detail and the plan attached, ready to track follow-up.</p></article>
-    <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="30" height="36" rx="4" fill="#1b3150" stroke="#c9b6ff" stroke-width="2.5"/><path d="M12 16h18M12 23h18M12 30h11" stroke="#9fb3cc" stroke-width="3" stroke-linecap="round"/><path d="M30 38l12-12-4-4-12 12-1 5z" fill="#ffd23f"/></svg></div><h3>Writes the CIL Suite note</h3><p>A clean Information &amp; Referral note with the client's details and every referral given, ready to paste into CIL Suite.</p></article>
+
   </div>
   <p class="sub" style="margin-top:22px">Want to look around first? <a href="#directory">Browse all resources</a>.</p>
 </section>
@@ -397,7 +396,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
       <h3><span class="n">5</span>Consent and follow-up</h3>
       <div class="g4">
         <div><label class="lbl" for="fAdv">Advocate</label><input type="text" id="fAdv" placeholder="Your name"></div>
-        <div><label class="lbl" for="fDbid">CIL Suite DBID (if known)</label><input type="number" id="fDbid" inputmode="numeric"></div>
+        <div hidden><label class="lbl" for="fDbid">Client ID (if known)</label><input type="number" id="fDbid" inputmode="numeric"></div>
         <div><label class="lbl" for="fFollow">Follow-up date</label><input type="date" id="fFollow"></div>
         <label class="check consent span4" for="fConsent"><input type="checkbox" id="fConsent" checked> <span><b>They agree</b> that DRR may share this information with the agencies on their Help Action Plan to advocate for them. <span class="req">*</span></span></label>
       </div>
@@ -426,10 +425,10 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
   <section class="card save" aria-labelledby="h-save">
     <span class="step-tag">Options</span>
     <h2 class="sec" id="h-save">Save, send and log</h2>
-    <p class="sub">Save puts the intake and plan in Airtable (HHP base › 🧭 Navigator Intakes) and on this page's saved list. Then copy the CIL Suite note or email it as a PDF.</p>
+    <p class="sub">Save keeps the intake and plan on this page's saved list. You can also email it as a PDF or download it.</p>
     <div class="form-actions" style="margin-top:0">
       <button class="btn btn-volt" type="button" id="btnSave">Save intake</button>
-      <button class="btn btn-ghost" type="button" id="btnCil">Copy CIL Suite note</button>
+      <button class="btn btn-ghost" type="button" id="btnCil" hidden>Copy note</button>
     </div>
     <div class="status" id="saveStatus" role="status" aria-live="polite"></div>
     <div class="recent" id="recentWrap" hidden><h3>Intakes you've saved</h3><ul id="recentList"></ul></div>
@@ -449,7 +448,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
         <button class="btn btn-water" type="button" id="btnDraft">Save as Gmail draft</button>
         <button class="btn btn-ghost" type="button" id="btnPdf">Download PDF</button>
       </div>
-      <p class="fine">The PDF, plan text and CIL note include the resources marked "Applies". If none are marked, they include everything except "Doesn't apply".</p>
+      <p class="fine">The PDF and plan text include the resources marked "Applies". If none are marked, they include everything except "Doesn't apply".</p>
       <p class="fine" id="mailHint">Sends from the DRR Navigator Gmail account. Replies go to that inbox. The first send asks you to allow Gmail.</p>
       <div class="status" id="mailStatus" role="status" aria-live="polite"></div>
     </div>
@@ -459,7 +458,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
     <span class="step-tag" id="planFor">Help Action Plan</span>
     <h2 class="sec" id="h-plan">Help Action Plan</h2>
     <div class="summary" id="summary"></div>
-    <p class="sub" style="margin-top:-6px">This pulls every program that could help, even small ones. Mark each one <b>Applies</b> or <b>Doesn't apply</b> for this client. Your choices shape what goes in the PDF and CIL note, and teach the navigator which resources work for cases like this.</p>
+    <p class="sub" style="margin-top:-6px">This pulls every program that could help, even small ones. Mark each one <b>Applies</b> or <b>Doesn't apply</b> for this client. Your choices shape what goes in the PDF, and teach the navigator which resources work for cases like this.</p>
     <div class="progress"><div class="bar" aria-hidden="true"><i id="barFill"></i></div><b id="progressText">0 of 0 called</b></div>
     <div class="actions">
       <button class="btn btn-ghost" type="button" id="copyPlan">Copy plan as text</button>
@@ -547,7 +546,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
 </dialog>
 <dialog id="passDlg" aria-labelledby="passH"><form method="dialog" id="passForm">
   <h3 id="passH">Advocate sign-in</h3>
-  <p class="why">Enter the DRR advocate passcode to save intakes to Airtable, email PDFs, add resources and send resource info updates. Anyone can search resources without it.</p>
+  <p class="why">Enter the DRR advocate passcode to save intakes, email PDFs, add resources and send resource info updates. Anyone can search resources without it.</p>
   <label class="lbl" for="passIn">Passcode</label><input type="password" id="passIn" autocomplete="current-password">
   <div class="status" id="passStatus" role="status"></div>
   <div class="row"><button type="button" class="btn btn-ghost" id="passOut">Sign out</button><button type="button" class="btn btn-ghost" id="passCancel">Cancel</button><button type="button" class="btn btn-volt" id="passGo">Sign in</button></div>
@@ -607,12 +606,12 @@ const ICON={
 };
 const NEEDS=[{id:'power',label:'Power bill / shutoff notice',short:'Power'},{id:'water',label:'Water shut off or behind',short:'Water'},{id:'gas',label:'Gas or heat bill',short:'Gas / Heat'},{id:'plumbing',label:'Broken plumbing or leak',short:'Plumbing'},{id:'roof',label:'Roof leak or home repair',short:'Roof / Repair'},
  {id:'food',label:'Food',short:'Food'},{id:'rent',label:'Rent, eviction or housing',short:'Rent / Housing'},{id:'shelter',label:'Homeless / needs shelter',short:'Shelter'},{id:'clothing',label:'Clothing',short:'Clothing'},{id:'furniture',label:'Furniture or beds',short:'Furniture / Beds'},
- {id:'transport',label:'Transportation / rides',short:'Transportation'},{id:'equipment',label:'Wheelchair or medical equipment',short:'Equipment'},{id:'respite',label:'Respite or caregiver help',short:'Respite'},{id:'foster',label:'Foster, kinship or adoption',short:'Foster care'},{id:'health',label:'Medical or dental care',short:'Medical / Dental'},
+ {id:'transport',label:'Transportation / rides',short:'Transportation'},{id:'equipment',label:'Wheelchair, prosthetic or medical equipment',short:'Equipment / Prosthetics'},{id:'respite',label:'Respite or caregiver help',short:'Respite'},{id:'foster',label:'Foster, kinship or adoption',short:'Foster care'},{id:'health',label:'Medical or dental care',short:'Medical / Dental'},
  {id:'benefits',label:'Social Security, SSI / SSDI, Medicaid',short:'Benefits'},{id:'job',label:'Need a job or steady income',short:'Job / Income'}];
 const NEED_WORDS={power:/\b(power|electric|light bill|lights (are |were |got )?(off|cut)|alabama power)/i,water:/\bwater\b/i,gas:/\b(gas bill|gas|heat|heating|propane|spire)\b/i,plumbing:/\b(plumb|pipe|leak|sewer|toilet|no running water)/i,roof:/\b(roof|shingles?|ceiling (is )?leak|leaking ceiling|home repairs?|house repairs?|repair (my|the|her|his) (house|home)|tarp)\b/i,
  food:/\b(food|hungry|groceries|grocery|pantry|eat|meals?|snap|food stamps)\b/i,rent:/\b(rent|evict|eviction|landlord|mortgage|behind on (the )?house|housing)\b/i,shelter:/\b(homeless|shelter|place to (stay|sleep|live)|nowhere to (stay|live|sleep|go)|living in (my|a|the|her|his) car|sleeping (outside|in (my|a|the|her|his) car)|on the streets?|kicked out|couch ?surfing|unhoused)\b/i,
  clothing:/\b(cloth|clothes|clothing|coat|coats|shoes|jacket)\b/i,furniture:/\b(furniture|bed|beds|mattress|couch|sofa|table|chairs?)\b/i,transport:/\b(ride|rides|transport|transportation|bus|car broke|no car|get to (the )?(doctor|appointments?|work))\b/i,
- equipment:/\b(wheelchair|walker|scooter|hospital bed|ramp|shower chair|lift|equipment|cane|oxygen)\b/i,respite:/\b(respite|caregiver|care giver|a break|break from|sitter|adult day|take care of (my|her|his))\b/i,
+ equipment:/\b(wheelchair|walker|scooter|hospital bed|ramp|shower chair|lift|equipment|cane|oxygen|prosthe\w*|artificial (leg|arm|limb)|amputee|amputation|limb loss|brace|orthotic\w*|power chair)\b/i,respite:/\b(respite|caregiver|care giver|a break|break from|sitter|adult day|take care of (my|her|his))\b/i,
  benefits:/\b(social security|ssi|ssdi|disability check|medicaid|medicare|benefits)\b/i,health:/\b(doctor|clinic|medical|medicine|prescriptions?|dental|dentist|teeth|tooth|sick|health care|no insurance|uninsured)\b/i,foster:/\b(foster|kinship|grand(kids?|child|children|sons?|daughters?)|raising (my|her|his|their) (niece|nephew|sister|brother)|aging out|aged out|adopt\w*|custody|placed (with|in)|placement|casa)\b/i,job:/\b(job|work|unemploy|laid off|lost (my|her|his) (job|hours)|income)\b/i};
 function detectNeeds(text){ return Object.keys(NEED_WORDS).filter(k=>NEED_WORDS[k].test(text||'')); }
 const SHORT=Object.fromEntries(NEEDS.map(n=>[n.id,n.short]));
@@ -3180,6 +3179,21 @@ const RND2=[
  {"id": "s9_1049", "name": "Alabama Public Service Commission - utility complaints & disconnect rules", "kind": "any", "needs": ["power", "gas", "water"], "phase": 4, "phone": "See website", "does": "Takes complaints about PSC-regulated utilities (Alabama Power, Spire); PSC General Rule 12(E) requires termination rules giving special consideration when life/health is threatened or for age/handicap.", "who": "Customers of investor-owned utilities (not co-ops, municipal or most water boards).", "web": "https://psc.alabama.gov", "note": "Rule 12(E) summary from LIHEAP Clearinghouse vulnerable-population disconnect page (liheapch.ncat.org/node/2812). PSC phone not verified here - see website.", area:{state:'AL',counties:["autauga", "baldwin", "barbour", "bibb", "blount", "bullock", "butler", "calhoun", "chambers", "cherokee", "chilton", "choctaw", "clarke", "clay", "cleburne", "coffee", "colbert", "conecuh", "coosa", "covington", "crenshaw", "cullman", "dale", "dallas", "dekalb", "elmore", "escambia", "etowah", "fayette", "franklin", "geneva", "greene", "hale", "henry", "houston", "jackson", "jefferson", "lamar", "lauderdale", "lawrence", "lee", "limestone", "lowndes", "macon", "madison", "marengo", "marion", "marshall", "mobile", "monroe", "montgomery", "morgan", "perry", "pickens", "pike", "randolph", "russell", "shelby", "st. clair", "sumter", "talladega", "tallapoosa", "tuscaloosa", "walker", "washington", "wilcox", "winston"]}, scopeLabel:"67 Alabama counties"}
 ];
 R.push(...RND2);
+const NEWEQ=[
+ {"id": "pr1", "name": "Limbs for Life Foundation", "alias": "Free prosthetic limbs", "kind": "any", "needs": ["equipment"], "phase": 2, "phone": "1-888-235-5462", "tel": "18882355462", "does": "Pays a partner prosthetic clinic near you to make and fit a new prosthetic leg or arm for people who can't afford one.", "who": "Amputees with no insurance or other way to pay for a prosthesis", "web": "https://www.limbsforlife.org", "apply": "https://www.limbsforlife.org/gethelp", "note": "Send the application with photo ID and proof of household income. Help is free for approved applicants.", "bring": ["Photo ID", "Proof of household income (award letters, pay stubs)", "Name of the prosthetist you'd like to use, if you have one"], area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr2", "name": "Amputee Coalition: National Limb Loss Resource Center", "alias": "Amputee Coalition", "kind": "any", "needs": ["equipment", "health"], "phase": 2, "phone": "1-888-267-5669", "tel": "18882675669", "does": "Free help for people with limb loss: what a prosthesis should cost, insurance appeals, a healthcare navigator, trained peer visitors and local support groups.", "who": "Anyone with limb loss or limb difference, and their families", "web": "https://www.amputee-coalition.org/NLLRC", "note": "Monday to Friday, 8 a.m. to 5 p.m. Eastern.", area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr3", "name": "VA Prosthetic & Sensory Aids Service", "alias": "Birmingham VA Medical Center", "kind": "any", "needs": ["equipment"], "phase": 2, "phone": "(205) 933-8101", "tel": "2059338101", "does": "Provides prosthetic limbs, braces, wheelchairs, scooters and home medical equipment to veterans at no cost when medically needed.", "who": "Veterans enrolled in VA health care, with a referral from their VA provider", "address": "700 South 19th Street, Birmingham 35233", "web": "https://www.va.gov/birmingham-health-care/", "note": "Not enrolled yet? Call 1-877-222-8387. Tuscaloosa VA: (205) 554-2000.", area:{state:'AL'}, scopeLabel:"Statewide, AL"},
+ {"id": "pr4", "name": "Alabama Medicaid prosthetics and orthotics", "alias": "Medicaid POP program", "kind": "any", "needs": ["equipment"], "phase": 2, "phone": "1-800-362-1504", "tel": "18003621504", "does": "Medicaid covers basic prosthetic limbs, braces and orthotics for adults 21 to 64 with prior approval, and medically necessary prostheses for children under 21.", "who": "Alabama Medicaid recipients", "web": "https://medicaid.alabama.gov", "note": "The prosthetist must be a Medicaid provider licensed in Alabama. Your doctor must document that you need it to walk or function.", "bring": ["Photo ID", "Prescription or doctor's note for the wheelchair or prosthesis", "Insurance, Medicaid or Medicare card", "Proof of income for the last 30 days"], area:{state:'AL'}, scopeLabel:"Statewide, AL"},
+ {"id": "pr5", "name": "ADRS Vocational Rehabilitation (equipment for work)", "alias": "Alabama Department of Rehabilitation Services", "kind": "any", "needs": ["equipment", "job"], "phase": 2, "phone": "1-800-441-7607", "tel": "18004417607", "does": "Can pay for medical equipment, assistive devices and job-site changes a person with a disability needs to get or keep a job or go to school.", "who": "Alabamians with a disability who want to work", "web": "https://www.rehab.alabama.gov/services/vr/vr", "note": "Free. A rehab counselor builds a work plan with you.", area:{state:'AL'}, scopeLabel:"Statewide, AL"},
+ {"id": "pr6", "name": "Alabama Head and Spinal Cord Injury Helpline", "alias": "ADRS Head & Spinal Cord Injury Trust Fund", "kind": "any", "needs": ["equipment", "respite"], "phase": 2, "phone": "1-888-879-4706", "tel": "18888794706", "does": "Information, resource coordination and service linkage for people with a brain or spinal cord injury, including help finding equipment.", "who": "Alabama residents with a traumatic brain injury or spinal cord injury", "web": "https://www.rehab.alabama.gov", area:{state:'AL'}, scopeLabel:"Statewide, AL"},
+ {"id": "pr7", "name": "Shriners Children's", "alias": "Free pediatric prosthetics and orthotics", "kind": "any", "needs": ["equipment", "health"], "phase": 2, "phone": "1-800-237-5055", "tel": "18002375055", "does": "Specialty orthopedic care for kids, including custom prosthetic limbs, braces and wheelchair seating, regardless of the family's ability to pay.", "who": "Children from birth to 18", "web": "https://www.shrinerschildrens.org", "note": "No doctor referral needed. Alabama families are usually seen at Shriners Children's Shreveport, Greenville or Lexington; local Shrine clubs often help with travel.", area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr8", "name": "Amputee Blade Runners", "alias": "Free running and sports prosthetics", "kind": "any", "needs": ["equipment"], "phase": 4, "phone": "615-378-5868", "tel": "6153785868", "does": "Makes free custom running and sports prosthetics, which insurance usually won't cover.", "who": "Lower-limb amputees in the U.S., at least one year after their first prosthesis", "web": "https://amputeebladerunners.com", "note": "Adults must complete three 5K races (walking is fine) and send results. No travel help.", area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr9", "name": "Ability Found", "alias": "Low-cost wheelchairs and adaptive equipment", "kind": "any", "needs": ["equipment"], "phase": 4, "phone": "See website", "does": "Places new and refurbished wheelchairs, power chairs, lifts and adaptive equipment for a low fee, based on need rather than income.", "who": "Children and adults with disabilities; must apply through a therapist or other professional", "web": "https://abilityfound.org/pages/need-help", "note": "Ask your physical or occupational therapist to apply for you.", area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr10", "name": "Hanger AMPOWER peer support", "alias": "Hanger Clinic", "kind": "any", "needs": ["equipment"], "phase": 4, "phone": "(877) 442-6437", "tel": "8774426437", "does": "Free peer mentoring, education and community events for amputees and their families. You don't have to be a Hanger patient.", "who": "Anyone with limb loss or limb difference", "web": "https://hangerclinic.com", "note": "Call or text.", area:'any', scopeLabel:"National (serves Alabama)"},
+ {"id": "pr11", "name": "Lakeshore Foundation", "alias": "Adaptive sports and fitness", "kind": "any", "needs": ["equipment"], "phase": 4, "phone": "205-313-7400", "tel": "2053137400", "does": "Fitness, adaptive sports and recreation for people with physical disabilities, including sports wheelchairs and adaptive equipment for programs.", "who": "People with physical disabilities, veterans and seniors", "address": "4000 Ridgeway Drive, Birmingham 35209", "web": "https://www.lakeshore.org", area:{state:'AL',counties:["jefferson","shelby","st. clair","blount","walker","tuscaloosa"]}, scopeLabel:"Birmingham area, AL"},
+ {"id": "pr12", "name": "UCP of Huntsville & Tennessee Valley", "alias": "SHARE equipment loans and Bellows Fund", "kind": "any", "needs": ["equipment"], "phase": 3, "phone": "256-859-4900", "tel": "2568594900", "does": "Loans durable medical and mobility equipment and helps apply for Bellows Fund grants for assistive technology.", "who": "Children and adults with disabilities in North Alabama", "web": "https://www.ucphuntsville.org", area:{state:'AL',counties:["madison","limestone","morgan","marshall","jackson"]}, scopeLabel:"North Alabama (Madison and nearby counties)"}
+];
+R.push(...NEWEQ);
 const PHASES={
  1:{t:'Today: urgent calls', why:'Stop a shutoff or eviction and book the big appointments first.'},
  2:{t:'This week: get help paying and get the basics', why:'Programs matched to this household and its needs.'},
@@ -3311,7 +3325,7 @@ $('#fixSave').addEventListener('click',async()=>{
   try{ localStorage.setItem('navAdvocate',by); }catch(_){}
   if(!DB){ addCorr(c); $('#fixDlg').close(); renderDir(); if(lastPlan.length) render(); toast('Updated here only. Sign in as an advocate to save it for everyone.'); return; }
   try{ await DB.collection('corrections').add(c); $('#fixDlg').close(); toast('Resource info updated for everyone'); }
-  catch(err){ $('#resStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Sign in with the advocate passcode (top of the page).':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
+  catch(err){ $('#fixStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Sign in with the advocate passcode (top of the page).':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
 });
 function buildPlan(h){
   const west=h.countyKey==='jefferson'&&WEST_JEFF.includes(h.city.toLowerCase());
@@ -3329,18 +3343,20 @@ function areaLabel(r){
   if(r.area.counties) return r.area.counties.map(c=>c[0].toUpperCase()+c.slice(1)).join(', ')+' County, '+r.area.state;
   return 'Statewide, '+r.area.state;
 }
+function fixUrl(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'https://'+u.replace(/^\/+/,'');}
 function card(r,withCheck){
-  const phone=r.tel?`<a class="phone" href="tel:${r.tel}">${esc(r.phone)}</a>`:`<span class="phone plain">${esc(r.phone||'')}</span>`;
+  const seeWeb=/^see (the )?website/i.test(r.phone||''), webLink=r.web||r.apply;
+  const phone=r.tel?`<a class="phone" href="tel:${r.tel}">${esc(r.phone)}</a>`:(seeWeb&&webLink?`<a class="phone" href="${esc(fixUrl(webLink))}" target="_blank" rel="noopener">No phone listed · Website ↗</a>`:`<span class="phone plain">${esc(seeWeb?'No phone listed':(r.phone||''))}</span>`);
   const badges=[r.closed?'<span class="badge closed">Reported closed</span>':'', r.custom?'<span class="badge partner">Added by advocate</span>':'', r.community?`<span class="badge partner">Added by DRR${r.addedBy?' ('+esc(r.addedBy)+')':''}</span>`:'', r.maybe?'<span class="badge maybe">Check eligibility</span>':'', r.past?`<span class="badge past">Applied in ${r.past} past case${r.past===1?'':'s'}</span>`:'', r.partner?'<span class="badge partner">DRR partner</span>':'', r.isNear?'<span class="badge near">Close to them</span>':'', r.speed?`<span class="badge">${esc(r.speed)}</span>`:'', ...r.needs.filter(n=>n!=='any').map(n=>`<span class="badge">${esc(SHORT[n])}</span>`)].join('');
   const meta=[`<dt>Who</dt><dd>${esc(r.who)}</dd>`, r.amount?`<dt>Amount</dt><dd>${esc(r.amount)}</dd>`:'', r.email?`<dt>Email</dt><dd><a href="mailto:${esc(r.email)}">${esc(r.email)}</a></dd>`:'', r.address?`<dt>Where</dt><dd>${esc(r.address)}</dd>`:'',
     (()=>{const b=bringFor(r);return `<dt>Bring</dt><dd><ul>${b.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${b.typical?'<span class="hint">Typical for this kind of help. Confirm when calling.</span>':''}</dd>`;})(),
-    r.web?`<dt>Online</dt><dd><a href="${r.web}">${esc(r.web.replace(/^https?:\/\//,'').replace(/\/$/,'').slice(0,48))}</a></dd>`:'',
+    r.web?`<dt>Online</dt><dd><a href="${esc(fixUrl(r.web))}" target="_blank" rel="noopener">${esc(r.web.replace(/^https?:\/\//,'').replace(/\/$/,'').slice(0,48))} ↗</a></dd>`:'',
     withCheck?'':`<dt>Serves</dt><dd class="area-tag">${esc(areaLabel(r))}</dd>`].join('');
   return `<article class="res k-${r.kind}${applied.has(r.id)?' applies':''}${notApplied.has(r.id)?' na':''}">
    <div class="res-top"><div><h4>${esc(r.name||'')} ${r.alias?`<span class="alias">· ${esc(r.alias)}</span>`:''}</h4><div class="badges">${badges}</div></div>${phone}</div>
    <p>${esc(r.does)}</p><dl class="meta">${meta}</dl>${r.note?`<p class="note">${esc(r.note)}</p>`:''}${r.flags&&r.flags.length?`<p class="note">⚠ Reported not working: ${esc(r.flags.join(', '))}. Double-check before using.</p>`:''}${r.updated?`<p class="updated">✓ Info updated ${esc(r.updated)}</p>`:''}
    ${r.custom?'':`<button type="button" class="fixbtn" data-fix="${esc(r.ckey||r.id)}" data-fixname="${esc(r.name||'')}">✎ Resource info update</button>`}
-   ${r.apply?`<a class="btn btn-apply" href="${esc(r.apply)}" target="_blank" rel="noopener">Apply or book online ↗</a>`:''}
+   ${r.apply?`<a class="btn btn-apply" href="${esc(fixUrl(r.apply))}" target="_blank" rel="noopener">Apply or book online ↗</a>`:''}
    ${withCheck?`<div class="res-checks">
      <div class="seg" role="group" aria-label="Does this apply to this client?">
        <button type="button" class="seg-b${applied.has(r.id)?' on':''}" data-apply="${r.id}" aria-pressed="${applied.has(r.id)}">✓ Applies</button>
@@ -3609,27 +3625,27 @@ $('#btnReadBack').addEventListener('click',()=>{
 
 /* ---------- capabilities ---------- */
 let DB=null,UID=null,MCP=null,airtableSent=false,resendArmed=false;
-$('#btnCil').addEventListener('click',()=>{const h=readForm();render();copy(cilNote(h),'CIL Suite note copied: paste it into the service entry');});
+$('#btnCil').addEventListener('click',()=>{const h=readForm();render();copy(cilNote(h),'Note copied');});
 $('#btnSave').addEventListener('click',async()=>{
   const h=readForm(),errs=validate(h); render();
   if(errs.length){setStatus(errs.map(t=>['bad',t]));return;}
   if(airtableSent&&!resendArmed){resendArmed=true;setStatus([['info','This intake was already saved. Press Save again to save a second copy.']]);return;}
   resendArmed=false;
-  if(!MCP&&!(DB&&UID)){setStatus([['bad','Saving isn\'t available in this view (you may be signed out, or only have view access).'],['info','Use "Copy CIL Suite note" or Email as PDF instead.']]);return;}
+  if(!MCP&&!(DB&&UID)){setStatus([['bad','Saving isn\'t available in this view (you may be signed out, or only have view access).'],['info','Use Email as PDF or Download PDF instead.']]);return;}
   const b=$('#btnSave');b.disabled=true;b.textContent='Saving…';
   const out=[];
   if(MCP){
     try{ await MCP.callTool('Airtable','create_records_for_table',{baseId:AT.base,tableId:AT.table,records:[{fields:airtableFields(h)}],typecast:true});
-      airtableSent=true; out.push(['ok','Saved to Airtable: HHP base › 🧭 Navigator Intakes (Status: New). The CIL note is in the record.']); }
+      airtableSent=true; out.push(['ok','Intake saved.']); }
     catch(err){ const c=err&&err.code,m={
-      needs_pass:'Not saved: sign in with the advocate passcode (top of the page), then press Save again.',server_not_connected:'Not saved to Airtable: the Airtable token isn\'t set up on the server yet. Tell Jason.',
-      needs_reauth:'Not saved to Airtable: your Airtable connection expired. Reconnect it in claude.ai Settings › Connectors.',
-      approval_required:'Not saved to Airtable: open this page in claude.ai and allow Airtable when asked, then press Save again.',
-      not_in_manifest:'Not saved to Airtable: Airtable was turned off for this page.',
-      blocked_by_policy:'Not saved to Airtable: your organization blocks it.',
-      tool_error:'Not saved to Airtable: Airtable refused the record. Tell Jason (the token may have expired).'};
-      out.push(['bad',m[c]||'Airtable didn\'t confirm the save. Check the table before saving again so you don\'t add a duplicate.']); }
-  } else out.push(['info','Airtable isn\'t connected for you, so this was not sent to Airtable.']);
+      needs_pass:'Not saved: sign in with the advocate passcode (top of the page), then press Save again.',server_not_connected:'Not saved: saving isn\'t set up on the server yet. Tell Jason.',
+      needs_reauth:'Not saved: the connection expired. Tell Jason.',
+      approval_required:'Not saved: permission is needed. Tell Jason.',
+      not_in_manifest:'Not saved: saving is turned off for this page.',
+      blocked_by_policy:'Not saved: your organization blocks it.',
+      tool_error:'Not saved: the server refused the record. Tell Jason.'};
+      out.push(['bad',m[c]||'The save wasn\'t confirmed. Check the saved list before saving again so you don\'t add a duplicate.']); }
+  } else out.push(['info','Saving isn\'t connected here, so this intake was not saved to the server.']);
   if(DB&&UID){
     try{ await DB.doc('intakes/'+UID).collection('items').add({...h,plan:lastPlan.map(r=>({id:r.id,name:r.name,phone:r.phone||'',phase:r.phase,applies:applied.has(r.id),notApplied:notApplied.has(r.id)})),createdAt:new Date().toISOString()});
       out.push(['ok','Added to the saved list on this page (only Jason and editors can see it).']); airtableSent=true; }
@@ -3637,7 +3653,6 @@ $('#btnSave').addEventListener('click',async()=>{
   }
   if(DB&&(applied.size||notApplied.size)){ try{ await DB.collection('outcomes').add({needs:h.needs,county:h.countyKey,state:h.state,applied:[...applied].filter(id=>!id.startsWith('c')),notApplied:[...notApplied],createdAt:new Date().toISOString()}); out.push(['ok',`Recorded which resources applied, so future plans for similar cases rank them higher.`]); }catch(e){} }
   else out.push(['info','Tip: mark resources "Applies" or "Doesn\'t apply" before saving. That teaches the navigator what works for future cases.']);
-  out.push(['info','Next: copy the CIL Suite note into CIL, then check "Logged in CIL" in Airtable.']);
   setStatus(out); b.disabled=false; b.textContent='Save intake';
 });
 function watchRecent(){
@@ -3757,7 +3772,7 @@ async function sendMail(tool){
     if(tool==='send_message') input.includeSignature=true;
     await MCP.callTool('Gmail',tool,input);
     mailStatus(tool==='send_message'
-      ? [['ok',`Sent from the DRR Navigator Gmail to ${input.to.join(', ')} with ${pdfName(h,mode)} attached. Check your Gmail Sent folder to confirm.`],['info','Log it as a service in CIL Suite if it counts as contact on the client\'s behalf.']]
+      ? [['ok',`Sent from the DRR Navigator Gmail to ${input.to.join(', ')} with ${pdfName(h,mode)} attached. Check your Gmail Sent folder to confirm.`]]
       : [['ok','Draft saved in Gmail with the PDF attached.'],['info','Open Gmail › Drafts to review and send it.']]);
   }catch(err){ const c=err&&err.code, m={
     needs_pass:'Sign in with the advocate passcode (top of the page) to send email, or use Download PDF.',server_not_connected:'Email isn\'t set up yet. Use Download PDF.',
