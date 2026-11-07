@@ -202,6 +202,11 @@ dialog#fixDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16p
 .btn-hero span{font-size:1.2em;line-height:1}
 .btn-hero:hover{transform:translateY(-2px);box-shadow:0 0 0 8px rgba(255,210,63,.22),0 22px 56px rgba(255,210,63,.38)}
 .cta-note{color:var(--muted);font-size:15px;margin:0}
+.hero-cta{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:none;padding:34px 0 6px;text-align:center}
+.hero-cta .cta-note{color:#cfdcec}
+.about-big{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.1;margin:6px 0 10px}
+@media (max-width:640px){nav.tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;width:100%;gap:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}nav.tabs a{white-space:nowrap;flex:0 0 auto}.pill-test{white-space:nowrap}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .feat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 @media (max-width:900px){.feat-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.feat-grid{grid-template-columns:1fr}.btn-hero{padding:20px 30px;width:100%;justify-content:center}}
@@ -253,15 +258,15 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
         DRR Resource Navigator <span class="pill-test">Test version</span></div>
       <nav class="tabs" aria-label="Sections">
         <a href="#home" id="tab-home">Home</a>
-        <a href="#intake" id="tab-intake" class="tab-new">+ New client</a>
+        <a href="#intake" id="tab-intake" class="tab-new">Find Resources</a>
         <a href="#directory" id="tab-directory">All resources</a>
         <a href="#addres" id="tab-addres">+ Add a resource</a>
-        <button type="button" id="navSignIn">🔒 Advocate sign-in</button>
+        <a href="#about" id="tab-about">About</a>
       </nav>
     </div>
-    <div class="hero-copy" id="heroCopy">
-      <h1>Let's see how<br>we can <span class="volt">help.</span></h1>
-      <p class="lede">Tell us about the person, where they live, and what's going on. We'll put together a Help Action Plan: who to call first, who qualifies, and what to bring.</p>
+    <div class="hero-copy hero-cta" id="heroCopy">
+      <button type="button" class="btn-hero" id="btnAddClient">Search Resources</button>
+      <p class="cta-note">Find help with bills, housing, food, equipment and more in any Alabama county.</p>
     </div>
   </div>
   <svg class="street" id="heroArt" viewBox="0 0 1200 230" role="img" aria-label="Illustration: a night street where house windows light up one by one under power lines, with a water tower on the right">
@@ -285,11 +290,14 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
 
 <main class="wrap">
 <section id="view-home" aria-labelledby="h-home">
-  <div class="cta-wrap">
-    <button type="button" class="btn-hero" id="btnAddClient">Search Resources</button>
-    <p class="cta-note">Takes about 5 minutes with the client on the phone or in person.</p>
-  </div>
-  <h2 class="sec" id="h-home" style="margin-top:34px">What this does</h2>
+  <h2 class="sr-only" id="h-home">Home</h2>
+  <p class="sub" style="text-align:center;margin-top:18px">Want to look around first? <a href="#directory">Browse all resources</a> · <a href="#about">What this does</a></p>
+</section>
+<section id="view-about" hidden aria-labelledby="h-about">
+  <h2 class="sec" id="h-about">About the Navigator</h2>
+  <p class="about-big">Let's see how we can <span class="volt">help.</span></p>
+  <p class="sub">Tell us about the person, where they live, and what's going on. We'll put together a Help Action Plan: who to call first, who qualifies, and what to bring.</p>
+  <h2 class="sec" style="margin-top:28px">What this does</h2>
   <p class="sub">One intake turns into a step-by-step plan, and the plan goes wherever it needs to go.</p>
   <div class="feat-grid">
     <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><rect x="8" y="5" width="32" height="40" rx="5" fill="#1b3150" stroke="#4cc9f0" stroke-width="2.5"/><rect x="17" y="2" width="14" height="8" rx="3" fill="#ffd23f"/><path d="M15 20h18M15 28h18M15 36h10" stroke="#9fb3cc" stroke-width="3" stroke-linecap="round"/></svg></div><h3>Takes the whole intake once</h3><p>Name, date of birth, exact address and county, what's going on, household size, income, income sources, disability and consent, all in one form.</p></article>
@@ -298,7 +306,8 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
     <article class="feat"><div class="feat-ico"><svg viewBox="0 0 48 48"><rect x="4" y="10" width="40" height="28" rx="5" fill="#4cc9f0"/><path d="M6 13l18 14 18-14" stroke="#0b1626" stroke-width="3.5" fill="none" stroke-linejoin="round"/><rect x="28" y="26" width="16" height="20" rx="2" fill="#ffd23f"/><text x="36" y="40" text-anchor="middle" font-size="8" font-weight="800" fill="#0b1626" font-family="Arial">PDF</text></svg></div><h3>Emails the plan as a PDF</h3><p>Send the full intake to an agency with the client's consent, or a plan-only copy to the client. Or save it as a Gmail draft first.</p></article>
 
   </div>
-  <p class="sub" style="margin-top:22px">Want to look around first? <a href="#directory">Browse all resources</a>.</p>
+
+  <p class="sub" style="margin-top:22px"><a href="#intake">Search resources</a> or <a href="#directory">browse all resources</a>.</p>
 </section>
 
 <section id="view-intake" hidden aria-labelledby="h-intake">
@@ -546,7 +555,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
 </dialog>
 <dialog id="passDlg" aria-labelledby="passH"><form method="dialog" id="passForm">
   <h3 id="passH">Advocate sign-in</h3>
-  <p class="why">Enter the DRR advocate passcode to save intakes, email PDFs, add resources and send resource info updates. Anyone can search resources without it.</p>
+  <p class="why">Enter the DRR advocate passcode to save intakes, email PDFs, add resources and send resource info updates. Anyone can search resources without it. You only need it when saving or sending.</p>
   <label class="lbl" for="passIn">Passcode</label><input type="password" id="passIn" autocomplete="current-password">
   <div class="status" id="passStatus" role="status"></div>
   <div class="row"><button type="button" class="btn btn-ghost" id="passOut">Sign out</button><button type="button" class="btn btn-ghost" id="passCancel">Cancel</button><button type="button" class="btn btn-volt" id="passGo">Sign in</button></div>
@@ -561,7 +570,7 @@ window.NAV_API='https://script.google.com/macros/s/AKfycbxKBA3l8sR_9QjCm9ybqOUQD
   async function post(body){
     let j; try{ const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...body,pass:getPass()})}); j=await r.json(); }
     catch(e){ const x=new Error('network'); x.code='server_unavailable'; throw x; }
-    if(!j.ok){ const x=new Error(j.message||j.code); x.code=MAP[j.code]||j.code; throw x; } return j;
+    if(!j.ok){ const x=new Error(j.message||j.code); x.code=MAP[j.code]||j.code; if(x.code==='needs_pass'&&body.action!=='check'&&window.__navAskPass) window.__navAskPass(); throw x; } return j;
   }
   window.__navPost=post;
   async function list(col){ const r=await fetch(API+'?action=list&col='+encodeURIComponent(col)); const j=await r.json(); if(!j.ok) throw new Error(j.code); return j.docs; }
@@ -3323,9 +3332,9 @@ $('#fixSave').addEventListener('click',async()=>{
   if(w==='email'&&v&&!/^\S+@\S+\.\S+$/.test(v)){ $('#fixStatus').innerHTML='<span class="bad">That email doesn\'t look right.</span>'; return; }
   const c={key:fixKey,field:w,value:v,note,by,resName:$('#fixFor').textContent.replace(/^For: /,'').split('. Your fix')[0],createdAt:new Date().toISOString()};
   try{ localStorage.setItem('navAdvocate',by); }catch(_){}
-  if(!DB){ addCorr(c); $('#fixDlg').close(); renderDir(); if(lastPlan.length) render(); toast('Updated here only. Sign in as an advocate to save it for everyone.'); return; }
+  if(!DB){ addCorr(c); $('#fixDlg').close(); renderDir(); if(lastPlan.length) render(); toast('Updated here only. Enter the advocate passcode to save it for everyone.'); return; }
   try{ await DB.collection('corrections').add(c); $('#fixDlg').close(); toast('Resource info updated for everyone'); }
-  catch(err){ $('#fixStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Sign in with the advocate passcode (top of the page).':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
+  catch(err){ $('#fixStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Enter the advocate passcode when asked.':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
 });
 function buildPlan(h){
   const west=h.countyKey==='jefferson'&&WEST_JEFF.includes(h.city.toLowerCase());
@@ -3441,13 +3450,13 @@ $('#dirCounty').innerHTML='<option value="">All counties</option>'+AL_COUNTIES.m
 $('#dirCounty').addEventListener('change',renderDir);
 
 /* ---------- routing ---------- */
-const VIEWS=['home','intake','plan','directory','addres'];
+const VIEWS=['home','intake','plan','directory','addres','about'];
 function route(){
   let v=(location.hash||'#home').slice(1); if(!VIEWS.includes(v)) v='home';
   if(v==='plan'&&!readForm().county){ location.replace('#intake'); return; }
   VIEWS.forEach(x=>$('#view-'+x).hidden=x!==v);
   document.querySelector('header.hero').classList.toggle('compact',v!=='home');
-  ['home','intake','directory','addres'].forEach(t=>$('#tab-'+t).toggleAttribute('aria-current',false));
+  ['home','intake','directory','addres','about'].forEach(t=>$('#tab-'+t).toggleAttribute('aria-current',false));
   const tab=v==='plan'?'intake':v; $('#tab-'+tab).setAttribute('aria-current','page');
   if(v==='plan'){ render(); const h=readForm(); $('#planFor').textContent='Help Action Plan'+(h.name?' · '+h.name:''); }
   window.scrollTo(0,0);
@@ -3638,7 +3647,7 @@ $('#btnSave').addEventListener('click',async()=>{
     try{ await MCP.callTool('Airtable','create_records_for_table',{baseId:AT.base,tableId:AT.table,records:[{fields:airtableFields(h)}],typecast:true});
       airtableSent=true; out.push(['ok','Intake saved.']); }
     catch(err){ const c=err&&err.code,m={
-      needs_pass:'Not saved: sign in with the advocate passcode (top of the page), then press Save again.',server_not_connected:'Not saved: saving isn\'t set up on the server yet. Tell Jason.',
+      needs_pass:'Not saved: enter the advocate passcode when asked, then press Save again.',server_not_connected:'Not saved: saving isn\'t set up on the server yet. Tell Jason.',
       needs_reauth:'Not saved: the connection expired. Tell Jason.',
       approval_required:'Not saved: permission is needed. Tell Jason.',
       not_in_manifest:'Not saved: saving is turned off for this page.',
@@ -3649,7 +3658,7 @@ $('#btnSave').addEventListener('click',async()=>{
   if(DB&&UID){
     try{ await DB.doc('intakes/'+UID).collection('items').add({...h,plan:lastPlan.map(r=>({id:r.id,name:r.name,phone:r.phone||'',phase:r.phase,applies:applied.has(r.id),notApplied:notApplied.has(r.id)})),createdAt:new Date().toISOString()});
       out.push(['ok','Added to the saved list on this page (only Jason and editors can see it).']); airtableSent=true; }
-    catch(err){ out.push(['bad', err&&err.code==='invalid_argument'?'Not added to this page\'s list: your access doesn\'t allow saving. Sign in with the advocate passcode (top of the page).':'Not added to this page\'s list just now.']); }
+    catch(err){ out.push(['bad', err&&err.code==='invalid_argument'?'Not added to this page\'s list: your access doesn\'t allow saving. Enter the advocate passcode when asked.':'Not added to this page\'s list just now.']); }
   }
   if(DB&&(applied.size||notApplied.size)){ try{ await DB.collection('outcomes').add({needs:h.needs,county:h.countyKey,state:h.state,applied:[...applied].filter(id=>!id.startsWith('c')),notApplied:[...notApplied],createdAt:new Date().toISOString()}); out.push(['ok',`Recorded which resources applied, so future plans for similar cases rank them higher.`]); }catch(e){} }
   else out.push(['info','Tip: mark resources "Applies" or "Doesn\'t apply" before saving. That teaches the navigator what works for future cases.']);
@@ -3775,7 +3784,7 @@ async function sendMail(tool){
       ? [['ok',`Sent from the DRR Navigator Gmail to ${input.to.join(', ')} with ${pdfName(h,mode)} attached. Check your Gmail Sent folder to confirm.`]]
       : [['ok','Draft saved in Gmail with the PDF attached.'],['info','Open Gmail › Drafts to review and send it.']]);
   }catch(err){ const c=err&&err.code, m={
-    needs_pass:'Sign in with the advocate passcode (top of the page) to send email, or use Download PDF.',server_not_connected:'Email isn\'t set up yet. Use Download PDF.',
+    needs_pass:'Enter the advocate passcode when asked to send email, or use Download PDF.',server_not_connected:'Email isn\'t set up yet. Use Download PDF.',
     needs_reauth:'Your Gmail connection expired. Reconnect it in claude.ai Settings › Connectors.',
     approval_required:'Sending needs your OK. Open this page in claude.ai and allow Gmail when asked.',
     not_in_manifest:'Gmail was turned off for this page. Turn it back on from the page\'s connector settings.',
@@ -3831,7 +3840,8 @@ $('#copyFb').addEventListener('click',()=>{const t=$('#fbText').value.trim();if(
  render(); renderDir(); route(); refreshMailDefaults(); bootCaps(); bootMail();
 
 (function(){ if(!window.NAV_API) return;
-  const b=$('#navSignIn'), dlg=$('#passDlg');
+  const b=$('#navSignIn')||document.createElement('button'), dlg=$('#passDlg');
+  window.__navAskPass=()=>{ $('#passStatus').innerHTML=''; $('#passIn').value=''; if(!dlg.open) dlg.showModal(); $('#passIn').focus(); };
   const mark=()=>{ let p=''; try{p=localStorage.getItem('navPass')||'';}catch(e){p=window.__navPass||'';} b.classList.toggle('in',!!p); b.textContent=p?'✓ Advocate signed in':'🔒 Advocate sign-in'; };
   mark();
   b.addEventListener('click',()=>{ $('#passStatus').innerHTML=''; $('#passIn').value=''; dlg.showModal(); $('#passIn').focus(); });
