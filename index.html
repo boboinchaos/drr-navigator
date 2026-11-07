@@ -153,6 +153,7 @@ button{font:inherit;cursor:pointer}
 .res.applies{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
 .res.na{opacity:.45}
 .badge.maybe{background:rgba(255,210,63,.12);color:#ffe28a;border-color:rgba(255,210,63,.4)}
+.badge.near{background:rgba(255,210,63,.14);color:#ffe28a;border-color:rgba(255,210,63,.45)}
 .badge.past{background:rgba(91,209,160,.15);color:#a6ecc9;border-color:rgba(91,209,160,.4)}
 .phase[data-p="5"] .phase-num{background:#c9b6ff}
 .add-res{border:1px dashed var(--line);border-radius:14px;padding:16px 16px 16px 46px}
@@ -3333,14 +3334,30 @@ $('#fixSave').addEventListener('click',async()=>{
   try{ await DB.collection('corrections').add(c); $('#fixDlg').close(); toast('Resource info updated for everyone'); }
   catch(err){ $('#fixStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Enter the advocate passcode when asked.':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
 });
+/* ---------- closest-first: sort by distance from the client's address ---------- */
+const GEO={p:null,loaded:false,addr:{},zip:{},client:null,key:'',busy:false};
+function normAddr(a){return String(a||'').toLowerCase().replace(/\([^)]*\)/g,'').replace(/[^a-z0-9]/g,'');}
+function loadGeo(){ if(GEO.p) return GEO.p; GEO.p=fetch('https://www.alabamaresourcedirectory.com/assets/near.json').then(r=>r.json()).then(j=>{ j.r.forEach(x=>{GEO.addr[normAddr(x[2])]=[x[3],x[4],x[7]];}); GEO.zip=j.z||{}; GEO.loaded=true; }).catch(()=>{}); return GEO.p; }
+function geoMiles(a,b,c,d){const R=3958.8,t=Math.PI/180,x=(c-a)*t,y=(d-b)*t,h=Math.sin(x/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+function resPoint(r){ if(!GEO.loaded||!r.address) return null; const p=GEO.addr[normAddr(r.address)]; if(p) return p; const z=(String(r.address).match(/\b3[56]\d{3}\b/g)||[]).pop(); return z&&GEO.zip[z]?[GEO.zip[z][0],GEO.zip[z][1],'z']:null; }
+function clientKey(h){ return [h.street,h.city,h.state,(h.zip||'').slice(0,5)].filter(Boolean).join(', '); }
+function locateClient(h){ const k=clientKey(h); if(!k||k===GEO.key) return; GEO.key=k; GEO.client=null; GEO.busy=true; const zip=(h.zip||'').slice(0,5);
+  const done=c=>{ if(GEO.key!==k) return; GEO.client=c; GEO.busy=false; if(location.hash==='#plan') render(); };
+  loadGeo().then(()=>{ const fallback=()=>done(GEO.zip[zip]?{lat:GEO.zip[zip][0],lon:GEO.zip[zip][1],rough:true}:null);
+    if(!h.street) return fallback();
+    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=us&q='+encodeURIComponent(k)).then(r=>r.json()).then(j=>{ if(j&&j[0]) done({lat:+j[0].lat,lon:+j[0].lon,rough:false}); else fallback(); }).catch(fallback); }); }
+function distOf(r){ const c=GEO.client, p=c&&resPoint(r); if(!p) return null; return {mi:geoMiles(c.lat,c.lon,p[0],p[1]), approx:p[2]!=='s'||c.rough}; }
+function distBadge(r){ return r.dist?`<span class="badge near">📍 ${r.dist.mi<0.1?'<0.1':r.dist.mi.toFixed(1)} mi from client${r.dist.approx?' (approx.)':''}</span>`:''; }
+function distTxt(r){ return r.dist?` (${r.dist.mi.toFixed(1)} mi)`:''; }
 function buildPlan(h){
   const west=h.countyKey==='jefferson'&&WEST_JEFF.includes(h.city.toLowerCase());
   const NEEDS_USE=h.needs.length?h.needs:NEEDS.map(n=>n.id);
   const CORE=['cil','211'];
   const base=[...R,...COMMUNITY].filter(r=>!r.dirOnly&&(r.needs.some(n=>NEEDS_USE.includes(n))||(r.needs.includes('any')&&(!h.needs.length||CORE.includes(r.id)||r.custom||r.community)))&&inArea(r,h))
-   .map(r=>({...dynamic(applyCorr(countyResolve(r,h),h.countyKey),h),isNear:!!(r.west&&west),maybe:!!(r.cond&&!r.cond(h)),past:pastCount(r.id,h)}));
+   .map(r=>({...dynamic(applyCorr(countyResolve(r,h),h.countyKey),h),isNear:!!(r.west&&west),maybe:!!(r.cond&&!r.cond(h)),past:pastCount(r.id,h)})).map(r=>({...r,dist:distOf(r)}));
   const extra=customRes.map(c=>({...c,isNear:false,maybe:false,past:0}));
-  return [...base,...extra].sort((a,b)=>a.phase-b.phase||(a.maybe-b.maybe)||(b.past-a.past)||(b.isNear-a.isNear)||((b.partner?1:0)-(a.partner?1:0)));
+  const dk=r=>r.dist?r.dist.mi:9999;
+  return [...base,...extra].sort((a,b)=>a.phase-b.phase||(a.maybe-b.maybe)||(dk(a)-dk(b))||(b.past-a.past)||(b.isNear-a.isNear)||((b.partner?1:0)-(a.partner?1:0)));
 }
 function areaLabel(r){
   if(r.scopeLabel) return r.scopeLabel;
@@ -3353,7 +3370,7 @@ function fixUrl(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'http
 function card(r,withCheck){
   const seeWeb=/^see (the )?website/i.test(r.phone||''), webLink=r.web||r.apply;
   const phone=r.tel?`<a class="phone" href="tel:${r.tel}">${esc(r.phone)}</a>`:(seeWeb&&webLink?`<a class="phone" href="${esc(fixUrl(webLink))}" target="_blank" rel="noopener">No phone listed · Website ↗</a>`:`<span class="phone plain">${esc(seeWeb?'No phone listed':(r.phone||''))}</span>`);
-  const badges=[r.closed?'<span class="badge closed">Reported closed</span>':'', r.custom?'<span class="badge partner">Added by advocate</span>':'', r.community?`<span class="badge partner">Added by DRR${r.addedBy?' ('+esc(r.addedBy)+')':''}</span>`:'', r.maybe?'<span class="badge maybe">Check eligibility</span>':'', r.past?`<span class="badge past">Applied in ${r.past} past case${r.past===1?'':'s'}</span>`:'', r.partner?'<span class="badge partner">DRR partner</span>':'', r.isNear?'<span class="badge near">Close to them</span>':'', r.speed?`<span class="badge">${esc(r.speed)}</span>`:'', ...r.needs.filter(n=>n!=='any').map(n=>`<span class="badge">${esc(SHORT[n])}</span>`)].join('');
+  const badges=[distBadge(r), r.closed?'<span class="badge closed">Reported closed</span>':'', r.custom?'<span class="badge partner">Added by advocate</span>':'', r.community?`<span class="badge partner">Added by DRR${r.addedBy?' ('+esc(r.addedBy)+')':''}</span>`:'', r.maybe?'<span class="badge maybe">Check eligibility</span>':'', r.past?`<span class="badge past">Applied in ${r.past} past case${r.past===1?'':'s'}</span>`:'', r.partner?'<span class="badge partner">DRR partner</span>':'', r.isNear?'<span class="badge near">Close to them</span>':'', r.speed?`<span class="badge">${esc(r.speed)}</span>`:'', ...r.needs.filter(n=>n!=='any').map(n=>`<span class="badge">${esc(SHORT[n])}</span>`)].join('');
   const meta=[`<dt>Who</dt><dd>${esc(r.who)}</dd>`, r.amount?`<dt>Amount</dt><dd>${esc(r.amount)}</dd>`:'', r.email?`<dt>Email</dt><dd><a href="mailto:${esc(r.email)}">${esc(r.email)}</a></dd>`:'', r.address?`<dt>Where</dt><dd>${esc(r.address)}</dd>`:'',
     (()=>{const b=bringFor(r);return `<dt>Bring</dt><dd><ul>${b.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${b.typical?'<span class="hint">Typical for this kind of help. Confirm when calling.</span>':''}</dd>`;})(),
     r.web?`<dt>Online</dt><dd><a href="${esc(fixUrl(r.web))}" target="_blank" rel="noopener">${esc(r.web.replace(/^https?:\/\//,'').replace(/\/$/,'').slice(0,48))} ↗</a></dd>`:'',
@@ -3385,6 +3402,7 @@ function renderSummary(h){
   }
   if(!h.needs.length) c.push('<span class="chip good">No needs picked: showing every program in this county</span>');
   if(h.heard&&h.heard.length) c.push(`<span class="chip good">Picked up from what they said: ${esc(h.heard.map(n=>SHORT[n]).join(', '))}</span>`);
+  if(clientKey(h)){ c.push(GEO.client?`<span class="chip good">📍 Closest to the client's ${GEO.client.rough?'ZIP code':'address'} first, within each step</span>`:(GEO.busy?'<span class="chip">📍 Finding the client\'s address to sort closest first…</span>':'<span class="chip warn">Couldn\'t place the client\'s address. Check the street and ZIP to sort closest first.</span>')); }
   if(h.age!=null) c.push(`<span class="chip">Age ${h.age}</span>`);
   if(h.county||h.city) c.push(`<span class="chip">${esc([h.city, h.county?h.county+' County':'', h.state].filter(Boolean).join(', '))}</span>`);
   const known=h.state==='AL'&&AL_COUNTIES.some(c=>ckey(c)===h.countyKey);
@@ -3397,6 +3415,7 @@ function updateProgress(){const t=lastPlan.length,d=lastPlan.filter(r=>called.ha
 function render(){
   const h=readForm(); renderSummary(h);
   if(!h.county){lastPlan=[];updateProgress();$('#bringBox').innerHTML='';$('#phases').innerHTML='<div class="card empty" style="grid-column:1/-1">Enter the county to see resources.</div>';return;}
+  locateClient(h);
   lastPlan=buildPlan(h);
   $('#bringBox').innerHTML=checklistHtml(planOut());
   $('#phases').innerHTML=[1,2,3,4,5].map(p=>({p,items:lastPlan.filter(r=>r.phase===p)})).filter(g=>g.items.length)
@@ -3426,7 +3445,7 @@ function planText(h){
   let o=`HELP ACTION PLAN: ${h.name||''}${h.city?' · '+h.city:''}${h.county?', '+h.county+' County':''}\nNeeds: ${h.needs.map(n=>SHORT[n]).join(', ')}\n`;
   const d=daysUntil(h.shutoff); if(d!==null) o+=`Shutoff: ${fmtDate(h.shutoff)} (${d} days)\n`;
   [1,2,3,4,5].forEach(p=>{const it=planOut().filter(r=>r.phase===p); if(!it.length) return; o+=`\n${PHASES[p].t.toUpperCase()}\n`;
-    it.forEach(r=>{o+=`- ${r.name}: ${r.phone}${r.email?' · '+r.email:''}${r.address?' · '+r.address:''}\n`; o+=`  Bring: ${bringFor(r).list.join('; ')}\n`; if(r.apply) o+=`  Apply online: ${r.apply}\n`; if(r.note) o+=`  Note: ${r.note}\n`;});});
+    it.forEach(r=>{o+=`- ${r.name}${distTxt(r)}: ${r.phone}${r.email?' · '+r.email:''}${r.address?' · '+r.address:''}\n`; o+=`  Bring: ${bringFor(r).list.join('; ')}\n`; if(r.apply) o+=`  Apply online: ${r.apply}\n`; if(r.note) o+=`  Note: ${r.note}\n`;});});
   return o+'\nCall to confirm funds are open.';
 }
 
