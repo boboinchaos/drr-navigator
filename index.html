@@ -3354,7 +3354,7 @@ const GEO={p:null,loaded:false,addr:{},zip:{},client:null,key:'',busy:false};
 function normAddr(a){return String(a||'').toLowerCase().replace(/\([^)]*\)/g,'').replace(/[^a-z0-9]/g,'');}
 function loadGeo(){ if(GEO.p) return GEO.p; const get=u=>fetch(u).then(r=>{if(!r.ok) throw 0; return r.json();}); GEO.p=get('near.json').catch(()=>get('https://www.alabamaresourcedirectory.com/assets/near.json')).then(j=>{ j.r.forEach(x=>{GEO.addr[normAddr(x[2])]=[x[3],x[4],x[7]];}); GEO.zip=j.z||{}; GEO.loaded=true; }).catch(()=>{}); return GEO.p; }
 function geoMiles(a,b,c,d){const R=3958.8,t=Math.PI/180,x=(c-a)*t,y=(d-b)*t,h=Math.sin(x/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
-function resPoint(r){ if(!GEO.loaded||!r.address) return null; const p=GEO.addr[normAddr(r.address)]; if(p) return p; const z=(String(r.address).match(/\b3[56]\d{3}\b/g)||[]).pop(); return z&&GEO.zip[z]?[GEO.zip[z][0],GEO.zip[z][1],'z']:null; }
+function resPoint(r){ if(r.geo) return r.geo; if(!GEO.loaded||!r.address) return null; const p=GEO.addr[normAddr(r.address)]; if(p) return p; const z=(String(r.address).match(/\b3[56]\d{3}\b/g)||[]).pop(); return z&&GEO.zip[z]?[GEO.zip[z][0],GEO.zip[z][1],'z']:null; }
 function clientKey(h){ return [h.street,h.city,h.state,(h.zip||'').slice(0,5)].filter(Boolean).join(', '); }
 function locateClient(h){ const k=clientKey(h); if(!k||k===GEO.key) return; GEO.key=k; GEO.client=null; GEO.busy=true; const zip=(h.zip||'').slice(0,5);
   const done=c=>{ if(GEO.key!==k) return; GEO.client=c; GEO.busy=false; if(location.hash==='#plan') render(); };
@@ -3364,7 +3364,7 @@ function locateClient(h){ const k=clientKey(h); if(!k||k===GEO.key) return; GEO.
 function distOf(r){ const c=GEO.client, p=c&&resPoint(r); if(!p) return null; return {mi:geoMiles(c.lat,c.lon,p[0],p[1]), approx:p[2]!=='s'||c.rough}; }
 function distBadge(r){ return r.dist?`<span class="badge near">📍 ${r.dist.mi<0.1?'<0.1':r.dist.mi.toFixed(1)} mi from client${r.dist.approx?' (approx.)':''}</span>`:''; }
 function distTxt(r){ return r.dist?` (${r.dist.mi.toFixed(1)} mi)`:''; }
-function buildPlan(h){
+function buildPlan(h){ if(typeof apply211==='function') apply211();
   const west=h.countyKey==='jefferson'&&WEST_JEFF.includes(h.city.toLowerCase());
   const NEEDS_USE=h.needs.length?h.needs:NEEDS.map(n=>n.id);
   const CORE=['cil','211'];
@@ -3466,7 +3466,7 @@ function planText(h){
 
 /* ---------- directory ---------- */
 let dirFilter='all';
-function renderDir(){
+function renderDir(){ if(typeof apply211==='function') apply211();
   const q=$('#q').value.toLowerCase().trim(), dc=$('#dirCounty').value;
   const hc={county:dc,countyKey:ckey(dc),state:'AL',needs:NEEDS.map(n=>n.id),city:''};
   const ALL=[...R,...COMMUNITY];
@@ -3886,5 +3886,7 @@ $('#copyFb').addEventListener('click',()=>{const t=$('#fbText').value.trim();if(
   $('#passGo').addEventListener('click',go); $('#passIn').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } });
 })();
 </script>
+<script src="data211.js"></script>
+<script>try{ if(typeof renderDir==='function') renderDir(); }catch(e){}</script>
 </body>
 </html>
