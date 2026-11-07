@@ -3337,7 +3337,7 @@ $('#fixSave').addEventListener('click',async()=>{
 /* ---------- closest-first: sort by distance from the client's address ---------- */
 const GEO={p:null,loaded:false,addr:{},zip:{},client:null,key:'',busy:false};
 function normAddr(a){return String(a||'').toLowerCase().replace(/\([^)]*\)/g,'').replace(/[^a-z0-9]/g,'');}
-function loadGeo(){ if(GEO.p) return GEO.p; GEO.p=fetch('https://www.alabamaresourcedirectory.com/assets/near.json').then(r=>r.json()).then(j=>{ j.r.forEach(x=>{GEO.addr[normAddr(x[2])]=[x[3],x[4],x[7]];}); GEO.zip=j.z||{}; GEO.loaded=true; }).catch(()=>{}); return GEO.p; }
+function loadGeo(){ if(GEO.p) return GEO.p; const get=u=>fetch(u).then(r=>{if(!r.ok) throw 0; return r.json();}); GEO.p=get('near.json').catch(()=>get('https://www.alabamaresourcedirectory.com/assets/near.json')).then(j=>{ j.r.forEach(x=>{GEO.addr[normAddr(x[2])]=[x[3],x[4],x[7]];}); GEO.zip=j.z||{}; GEO.loaded=true; }).catch(()=>{}); return GEO.p; }
 function geoMiles(a,b,c,d){const R=3958.8,t=Math.PI/180,x=(c-a)*t,y=(d-b)*t,h=Math.sin(x/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
 function resPoint(r){ if(!GEO.loaded||!r.address) return null; const p=GEO.addr[normAddr(r.address)]; if(p) return p; const z=(String(r.address).match(/\b3[56]\d{3}\b/g)||[]).pop(); return z&&GEO.zip[z]?[GEO.zip[z][0],GEO.zip[z][1],'z']:null; }
 function clientKey(h){ return [h.street,h.city,h.state,(h.zip||'').slice(0,5)].filter(Boolean).join(', '); }
