@@ -571,7 +571,14 @@ window.NAV_API='https://script.google.com/macros/s/AKfycbxKBA3l8sR_9QjCm9ybqOUQD
   window.__navPost=post;
   async function list(col){ const r=await fetch(API+'?action=list&col='+encodeURIComponent(col)); const j=await r.json(); if(!j.ok) throw new Error(j.code); return j.docs; }
   const snap=docs=>({empty:!docs.length,docs:docs.map(d=>({id:d.id,data:()=>d.data}))});
-  function coll(name){ const q={orderBy(){return q},limit(){return q},
+  /* Saved intakes stay on this device only (client details never go to the shared sheet, whose list is readable without the passcode). */
+  function localColl(name){ const K='navLocal_'+name, rd=()=>{ try{ return JSON.parse(localStorage.getItem(K)||'[]'); }catch(e){ return []; } };
+    const q={orderBy(){return q},limit(){return q},
+      async add(doc){ const a=rd(); const id=Math.random().toString(36).slice(2,12); a.unshift({id,data:doc}); try{ localStorage.setItem(K,JSON.stringify(a.slice(0,50))); }catch(e){} window.dispatchEvent(new CustomEvent('navchanged',{detail:name})); return {ok:true,id}; },
+      async get(){ return snap(rd()); },
+      onSnapshot(cb){ const tick=()=>cb(snap(rd())); tick(); window.addEventListener('navchanged',e=>{ if(e.detail===name) tick(); }); return ()=>{}; } };
+    return q; }
+  function coll(name){ if(name==='items') return localColl(name); const q={orderBy(){return q},limit(){return q},
     async add(doc){ try{ const r=await post({action:'add',col:name,doc}); window.dispatchEvent(new CustomEvent('navchanged',{detail:name})); return r; }catch(e){ if(e.code==='needs_pass') e.code='invalid_argument'; throw e; } },
     async get(){ return snap(await list(name)); },
     onSnapshot(cb,err){ const tick=async()=>{ try{ cb(snap(await list(name))); }catch(e){ err&&err(e); } };
@@ -583,7 +590,8 @@ window.NAV_API='https://script.google.com/macros/s/AKfycbxKBA3l8sR_9QjCm9ybqOUQD
       if(server==='Airtable') return post({action:'airtable',records:input.records});
       if(server==='Gmail') return post({action:'mail',to:input.to,cc:input.cc||[],subject:input.subject,body:input.body,attachments:input.attachments,draft:tool==='create_draft'});
       const x=new Error('unknown'); x.code='not_in_manifest'; throw x; } };
-  window.claude={use:async k=>({db:DBS,mcp:MCPS}[k]||null)};
+  const USER={ async id(){ try{ let u=localStorage.getItem('navDevice'); if(!u){ u='dev-'+Math.random().toString(36).slice(2,12); localStorage.setItem('navDevice',u); } return u; }catch(e){ return 'dev-session'; } } };
+  window.claude={use:async k=>({db:DBS,mcp:MCPS,user:USER}[k]||null)};
 })();
 </script><script>
 const $=s=>document.querySelector(s);
@@ -3673,7 +3681,7 @@ $('#btnSave').addEventListener('click',async()=>{
   } else out.push(['info','Saving isn\'t connected here, so this intake was not saved to the server.']);
   if(DB&&UID){
     try{ await DB.doc('intakes/'+UID).collection('items').add({...h,plan:lastPlan.map(r=>({id:r.id,name:r.name,phone:r.phone||'',phase:r.phase,applies:applied.has(r.id),notApplied:notApplied.has(r.id)})),createdAt:new Date().toISOString()});
-      out.push(['ok','Added to the saved list on this page (only Jason and editors can see it).']); airtableSent=true; }
+      out.push(['ok','Added to Intakes you\'ve saved on this device.']); airtableSent=true; }
     catch(err){ out.push(['bad', err&&err.code==='invalid_argument'?'Not added to this page\'s list: your access doesn\'t allow saving. Enter the advocate passcode when asked.':'Not added to this page\'s list just now.']); }
   }
   if(DB&&(applied.size||notApplied.size)){ try{ await DB.collection('outcomes').add({needs:h.needs,county:h.countyKey,state:h.state,applied:[...applied].filter(id=>!id.startsWith('c')),notApplied:[...notApplied],createdAt:new Date().toISOString()}); out.push(['ok',`Recorded which resources applied, so future plans for similar cases rank them higher.`]); }catch(e){} }
