@@ -206,6 +206,7 @@ dialog#fixDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16p
 .hero-cta .cta-note{color:#cfdcec}
 .about-big{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.1;margin:6px 0 10px}
 @media (max-width:640px){nav.tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;width:100%;gap:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}nav.tabs a{white-space:nowrap;flex:0 0 auto}.pill-test{white-space:nowrap}}
+details.pd>summary{list-style:none;cursor:pointer}details.pd>summary::-webkit-details-marker{display:none}details.pd>summary h3{display:flex;align-items:center;gap:10px;flex-wrap:wrap}details.pd>summary h3::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}details.pd[open]>summary h3::after{transform:rotate(180deg)}details.pd[open]>summary{margin-bottom:12px}.opt{font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0}.reqtxt{font-size:11px;font-weight:700;color:var(--volt);text-transform:uppercase;letter-spacing:.5px;margin-left:4px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .feat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 @media (max-width:900px){.feat-grid{grid-template-columns:1fr 1fr}}
@@ -265,7 +266,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
       </nav>
     </div>
     <div class="hero-copy hero-cta" id="heroCopy">
-      <button type="button" class="btn-hero" id="btnAddClient">Search Resources</button>
+      <button type="button" class="btn-hero" id="btnAddClient">Find Resources</button>
       <p class="cta-note">Find help with bills, housing, food, equipment and more in any Alabama county.</p>
     </div>
   </div>
@@ -314,9 +315,9 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
   <form class="card" id="intake" novalidate>
     <div class="form-head">
       <div>
-        <span class="step-tag" style="display:block">New client intake</span>
+        <span class="step-tag" style="display:block">Find resources</span>
         <h2 class="sec" id="h-intake">Tell us about them</h2>
-        <p class="sub">Only the <b>county</b> is needed to see resources. Leave the rest blank and you get every program in that county. Fields marked <span class="req">*</span> are needed to save the intake. <button type="button" class="linkish" id="btnSample">Testing? Fill in a sample client</button></p>
+        <p class="sub">Only the <b>county</b> is needed to find resources. Personal details are optional. <button type="button" class="linkish" id="btnSample">Testing? Fill in a sample client</button></p>
       </div>
       <svg class="clip" viewBox="0 0 80 96" aria-hidden="true"><rect x="6" y="10" width="68" height="82" rx="8" fill="#1b3150" stroke="#4cc9f0" stroke-width="3"/><rect x="24" y="2" width="32" height="16" rx="5" fill="#ffd23f"/><path d="M18 38h44M18 52h44M18 66h28" stroke="#9fb3cc" stroke-width="4" stroke-linecap="round"/><path d="M48 70l7 7 13-15" stroke="#5bd1a0" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
@@ -344,52 +345,20 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
     </div>
 
     </div>
-    <div class="block" style="border-top:0;margin-top:0;padding-top:4px">
-      <h3><span class="n">1</span>The person</h3>
+    <details class="block pd" id="pdBox" style="border-top:0;margin-top:0;padding-top:4px">
+      <summary><h3><span class="n">1</span>Personal details <span class="opt">optional · tap to open</span></h3></summary>
       <div class="g4">
-        <div><label class="lbl" for="fFirst">First name <span class="req">*</span></label><input type="text" id="fFirst" autocomplete="given-name"></div>
-        <div><label class="lbl" for="fLast">Last name <span class="req">*</span></label><input type="text" id="fLast" autocomplete="family-name"></div>
+        <div><label class="lbl" for="fFirst">First name</label><input type="text" id="fFirst" autocomplete="given-name"></div>
+        <div><label class="lbl" for="fLast">Last name</label><input type="text" id="fLast" autocomplete="family-name"></div>
         <div><label class="lbl" for="fDob">Date of birth</label><input type="date" id="fDob"></div>
         <div><label class="lbl" for="fAge">Age</label><input type="number" id="fAge" min="0" max="120" inputmode="numeric"><div class="hint">Date of birth or age, either works.</div></div>
-        <div><label class="lbl" for="fPhone">Phone <span class="req">*</span></label><input type="tel" id="fPhone" autocomplete="tel" placeholder="(205) 555-0123"></div>
+        <div><label class="lbl" for="fPhone">Phone</label><input type="tel" id="fPhone" autocomplete="tel" placeholder="(205) 555-0123"></div>
         <div><label class="lbl" for="fEmail">Email</label><input type="email" id="fEmail" autocomplete="email"></div>
         <div><label class="lbl" for="fPref">Best way to reach</label><select id="fPref"><option>Call</option><option>Text</option><option>Email</option></select></div>
         <div><label class="lbl" for="fTime">Best time to reach</label><input type="text" id="fTime" placeholder="Mornings, after 3pm…"></div>
-      </div>
-    </div>
-
-    <div class="block">
-      <h3><span class="n">2</span>Where they live and income</h3>
-      <div class="g4">
-        <div class="span2"><label class="lbl" for="fStreet">Street address <span class="req">*</span></label><input type="text" id="fStreet" autocomplete="address-line1"></div>
-        <div><label class="lbl" for="fUnit">Apt / unit</label><input type="text" id="fUnit" autocomplete="address-line2"></div>
-        <div><label class="lbl" for="fCity">City <span class="req">*</span></label><input type="text" id="fCity" autocomplete="address-level2"></div>
-        <div><label class="lbl" for="fCounty">County <span class="req">*</span></label><input type="text" id="fCounty" list="countyList" placeholder="Start typing…" autocomplete="off"><datalist id="countyList"></datalist><div class="hint">Programs are matched to the county.</div></div>
-        <div><label class="lbl" for="fState">State <span class="req">*</span></label><select id="fState" autocomplete="address-level1"></select></div>
-        <div><label class="lbl" for="fZip">ZIP <span class="req">*</span></label><input type="text" id="fZip" inputmode="numeric" maxlength="10" autocomplete="postal-code"></div>
+        <div><label class="lbl" for="fIncome">Monthly household income ($)</label><input type="number" id="fIncome" min="0" step="50" inputmode="numeric"><div class="hint">Before taxes, everyone in the home.</div></div>
         <div><label class="lbl" for="fHousing">Housing</label><select id="fHousing"><option value="">Choose…</option><option>Own</option><option>Rent</option><option>Live with family</option><option>Mobile home</option><option>Other</option></select></div>
-        <div><label class="lbl" for="fIncome">Monthly household income ($) <span class="req">*</span></label><input type="number" id="fIncome" min="0" step="50" inputmode="numeric"><div class="hint">Before taxes, everyone in the home. Enter 0 if none.</div></div>
-      </div>
-    </div>
-
-    <div class="block">
-      <h3><span class="n">3</span>What's going on</h3>
-      <div style="margin-bottom:16px"><label class="lbl" for="fSit">What's happening, in their words</label><div class="hint" id="sitHeard" aria-live="polite" style="color:var(--ok);font-weight:700"></div><textarea id="fSit" placeholder="Example: Water was cut off Monday. Power notice says shutoff on the 9th. Lost hours at work."></textarea></div>
-      <fieldset><legend class="lbl">What do they need help with? <span class="req">*</span></legend>
-        <div class="needs" id="needs"></div></fieldset>
-      <div class="g4" style="margin-top:14px">
-        <div><label class="lbl" for="fShutoff">Shutoff date on the notice</label><input type="date" id="fShutoff"></div>
-        <div><label class="lbl" for="fOwed">Amount owed ($)</label><input type="number" id="fOwed" min="0" step="0.01" inputmode="decimal"></div>
-        <div><label class="lbl" for="fElec">Electric company</label><input type="text" id="fElec" placeholder="e.g. Alabama Power"></div>
-        <div><label class="lbl" for="fWater">Water company</label><input type="text" id="fWater" placeholder="e.g. Central Alabama Water"></div>
-        <div><label class="lbl" for="fGas">Gas company</label><input type="text" id="fGas" placeholder="e.g. Spire"></div>
-      </div>
-    </div>
-
-    <div class="block">
-      <h3><span class="n">4</span>Household and disability</h3>
-      <div class="g4">
-        <div><label class="lbl" for="fSize">People in the home <span class="req">*</span></label><input type="number" id="fSize" min="1" max="15" inputmode="numeric"></div>
+        <div><label class="lbl" for="fSize">People in the home</label><input type="number" id="fSize" min="1" max="15" inputmode="numeric"></div>
         <div><label class="lbl" for="fKids">Children under 18</label><input type="number" id="fKids" min="0" max="15" inputmode="numeric"></div>
         <div><label class="lbl" for="fDisType">Disability type</label><select id="fDisType"><option value="">None / not asked</option><option>Physical / mobility</option><option>Visual</option><option>Hearing</option><option>Cognitive / intellectual</option><option>Mental health</option><option>Multiple</option><option>Other</option><option>Prefer not to say</option></select></div>
         <fieldset class="span4"><legend class="lbl">Anyone in the home…</legend>
@@ -399,6 +368,32 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
             <label class="check" for="fVet"><input type="checkbox" id="fVet"> is a veteran</label>
           </div></fieldset>
       </div>
+    </details>
+
+    <div class="block">
+      <h3><span class="n">2</span>Where they live</h3>
+      <div class="g4">
+        <div class="span2"><label class="lbl" for="fStreet">Street address</label><input type="text" id="fStreet" autocomplete="address-line1"></div>
+        <div><label class="lbl" for="fUnit">Apt / unit</label><input type="text" id="fUnit" autocomplete="address-line2"></div>
+        <div><label class="lbl" for="fCity">City</label><input type="text" id="fCity" autocomplete="address-level2"></div>
+        <div><label class="lbl" for="fCounty">County <span class="reqtxt">Required</span></label><input type="text" id="fCounty" list="countyList" placeholder="Start typing…" autocomplete="off"><datalist id="countyList"></datalist><div class="hint">Programs are matched by county.</div></div>
+        <div><label class="lbl" for="fState">State</label><select id="fState" autocomplete="address-level1"></select></div>
+        <div><label class="lbl" for="fZip">ZIP</label><input type="text" id="fZip" inputmode="numeric" maxlength="10" autocomplete="postal-code"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">3</span>What's going on</h3>
+      <fieldset><legend class="lbl">What do they need help with?</legend>
+        <div class="needs" id="needs"></div></fieldset>
+      <div class="g4" id="utilBox" style="margin-top:14px" hidden>
+        <div data-util="any"><label class="lbl" for="fShutoff">Shutoff date on the notice</label><input type="date" id="fShutoff"></div>
+        <div data-util="any"><label class="lbl" for="fOwed">Amount owed ($)</label><input type="number" id="fOwed" min="0" step="0.01" inputmode="decimal"></div>
+        <div data-util="power"><label class="lbl" for="fElec">Electric company</label><input type="text" id="fElec" placeholder="e.g. Alabama Power"></div>
+        <div data-util="water"><label class="lbl" for="fWater">Water company</label><input type="text" id="fWater" placeholder="e.g. Central Alabama Water"></div>
+        <div data-util="gas"><label class="lbl" for="fGas">Gas company</label><input type="text" id="fGas" placeholder="e.g. Spire"></div>
+      </div>
+      <div style="margin-top:16px"><label class="lbl" for="fSit">What's happening, in their words</label><div class="hint" id="sitHeard" aria-live="polite" style="color:var(--ok);font-weight:700"></div><textarea id="fSit" placeholder="Example: Water was cut off Monday. Power notice says shutoff on the 9th. Lost hours at work."></textarea></div>
     </div>
 
     <div class="block" hidden aria-hidden="true">
@@ -412,7 +407,7 @@ dialog#passDlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-volt" type="submit">See available resources →</button><span class="hint">Only the county is required.</span>
+      <button class="btn btn-volt" type="submit">Find available resources →</button>
       <a class="btn btn-ghost" href="#home">Cancel</a>
     </div>
     <div class="status" id="intakeStatus" role="status" aria-live="polite"></div>
@@ -3214,12 +3209,14 @@ const PHASES={
 /* ---------- form setup ---------- */
 $('#countyList').innerHTML=AL_COUNTIES.map(c=>`<option value="${c}">`).join('');
 $('#fState').innerHTML=STATES.map(s=>`<option${s==='AL'?' selected':''}>${s}</option>`).join('');
-$('#needs').innerHTML=NEEDS.map(n=>`<label class="need" for="need-${n.id}"><input type="checkbox" id="need-${n.id}" value="${n.id}"><span class="tile">${ICON[n.id]}<span>${n.label}</span></span></label>`).join('');
+$('#needs').innerHTML=[...NEEDS].sort((x,y)=>x.label.localeCompare(y.label)).map(n=>`<label class="need" for="need-${n.id}"><input type="checkbox" id="need-${n.id}" value="${n.id}"><span class="tile">${ICON[n.id]}<span>${n.label}</span></span></label>`).join('');
 function isoPlus(d){const x=new Date();x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)}
 function ageFrom(dob){ if(!dob) return null; const b=new Date(dob+'T00:00:00'),t=new Date(); let a=t.getFullYear()-b.getFullYear(); const m=t.getMonth()-b.getMonth(); if(m<0||(m===0&&t.getDate()<b.getDate())) a--; return (a>=0&&a<125)?a:null; }
 $('#fDob').addEventListener('change',()=>{const a=ageFrom($('#fDob').value); if(a!=null){ $('#fAge').value=a; if(a>=60) $('#fSenior').checked=true; }});
 $('#fAge').addEventListener('change',()=>{const a=parseInt($('#fAge').value,10); if(a>=60) $('#fSenior').checked=true;});
 
+function utilShow(){ const on=id=>{const e=$('#need-'+id);return !!(e&&e.checked)}; const any=['power','water','gas'].some(on); $('#utilBox').hidden=!any; $('#utilBox').querySelectorAll('[data-util]').forEach(d=>{const u=d.dataset.util; d.hidden=u==='any'?!any:!on(u);}); }
+$('#needs').addEventListener('change',utilShow); utilShow();
 $('#fSit').addEventListener('input',()=>{ const d=detectNeeds($('#fSit').value); $('#sitHeard').textContent=d.length?'Picked up: '+d.map(n=>SHORT[n]).join(', ')+'. These will be included.':''; });
 $('#fDisType').addEventListener('change',()=>{const v=$('#fDisType').value; if(v&&v!=='Prefer not to say') $('#fDisabled').checked=true;});
 const EXAMPLE={fFirst:'Sample',fLast:'Person',fDob:'1958-03-14',fPhone:'(205) 555-0142',fPref:'Text',fTime:'After 2pm',fStreet:'123 Example Ave',fCity:'Fairfield',fCounty:'Jefferson',fState:'AL',fZip:'35064',fHousing:'Own',
@@ -3227,11 +3224,11 @@ const EXAMPLE={fFirst:'Sample',fLast:'Person',fDob:'1958-03-14',fPhone:'(205) 55
 function fillExample(){
   Object.entries(EXAMPLE).forEach(([id,v])=>{$('#'+id).value=v});
   ['power','water'].forEach(id=>$('#need-'+id).checked=true);
-  $('#fShutoff').value=isoPlus(5); 
+  $('#fShutoff').value=isoPlus(5); utilShow(); $('#pdBox').open=true; 
   $('#fSenior').checked=true; $('#fDisabled').checked=true;
   $('#fAge').value=ageFrom(EXAMPLE.fDob);
 }
-function clearForm(){
+function clearForm(){ setTimeout(()=>{try{utilShow();}catch(e){}},0);
   $('#intake').reset(); $('#fState').value='AL'; 
   document.querySelectorAll('.field-err').forEach(e=>e.classList.remove('field-err'));
   showAll5=false; called.clear(); applied.clear(); notApplied.clear(); customRes=[]; airtableSent=false; $('#voiceText').value=''; $('#voiceStatus').innerHTML=''; document.querySelectorAll('.voice-filled').forEach(e=>e.classList.remove('voice-filled')); resendArmed=false; render(); setStatus([]);
