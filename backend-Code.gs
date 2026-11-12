@@ -9,7 +9,6 @@
  *
  * Setup (one time, about 10 minutes):
  *  1. Project Settings (gear icon) > Script properties > add:
- *       PASSCODE        a passcode you give your advocates
  *       AIRTABLE_TOKEN  your Airtable personal access token (airtable.com/create/tokens,
  *                       scope data.records:write, access to the HHP base)
  *  2. Pick "setup" in the function menu at the top and press Run. Allow the permissions.
@@ -75,12 +74,17 @@ function doPost(e) {
   var req;
   try { req = JSON.parse(e.postData.contents); } catch (x) { return out_({ ok: false, code: 'bad_request' }); }
   var props = PropertiesService.getScriptProperties();
-  var pass = props.getProperty('PASSCODE');
-  if (!pass || req.pass !== pass) return out_({ ok: false, code: 'bad_pass' });
+  // No passcode (Jason's choice, 2026-11-12). Daily caps stop abuse of the public link instead.
+  function overCap_(kind, max) {
+    var key = 'cap_' + kind + '_' + Utilities.formatDate(new Date(), 'America/Chicago', 'yyyyMMdd');
+    var c = CacheService.getScriptCache(); var n = Number(c.get(key) || 0);
+    if (n >= max) return true; c.put(key, String(n + 1), 21600); return false;
+  }
   try {
     if (req.action === 'check') return out_({ ok: true });
 
     if (req.action === 'add') {
+      if (overCap_('add', 300)) return out_({ ok: false, code: 'too_many' });
       if (COLLECTIONS.indexOf(req.col) < 0) return out_({ ok: false, code: 'bad_request' });
       var json = JSON.stringify(req.doc || {});
       if (json.length > 45000) return out_({ ok: false, code: 'too_big' });
@@ -93,6 +97,7 @@ function doPost(e) {
     }
 
     if (req.action === 'airtable') {
+      if (overCap_('airtable', 150)) return out_({ ok: false, code: 'too_many' });
       var token = props.getProperty('AIRTABLE_TOKEN');
       if (!token) return out_({ ok: false, code: 'no_airtable' });
       var res = UrlFetchApp.fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_TABLE, {
@@ -106,6 +111,7 @@ function doPost(e) {
     }
 
     if (req.action === 'mail') {
+      if (overCap_('mail', 60)) return out_({ ok: false, code: 'too_many' });
       var to = (req.to || []).join(','), opts = { name: req.fromName || 'DRR Resource Navigator' };
       if (!to) return out_({ ok: false, code: 'bad_request' });
       if (req.cc && req.cc.length) opts.cc = req.cc.join(',');

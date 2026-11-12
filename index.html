@@ -246,6 +246,7 @@ html.ro #btnSave,html.ro #recentWrap,html.ro #btnSend,html.ro #btnDraft,html.ro 
 html.ro #emailBlock .g4 .span2:nth-child(-n+3),html.ro #emailBlock .g4 .span4,html.ro #navSignIn{display:none!important}
 #navSignIn{background:none;border:1px solid var(--line);color:inherit;font:inherit;border-radius:999px;padding:6px 12px;cursor:pointer}
 #navSignIn.in{border-color:var(--ok);color:var(--ok)}
+#navSignIn{display:none!important}
 dialog#passDlg{background:var(--panel);color:inherit;border:2px solid var(--volt);border-radius:16px;padding:22px;max-width:420px;width:calc(100% - 32px)}
 dialog#passDlg::backdrop{background:rgba(5,10,20,.7)}
 dialog#passDlg h3{font-family:var(--display);margin:0 0 6px;font-size:22px}
@@ -3345,7 +3346,7 @@ $('#fixSave').addEventListener('click',async()=>{
   if(w==='email'&&v&&!/^\S+@\S+\.\S+$/.test(v)){ $('#fixStatus').innerHTML='<span class="bad">That email doesn\'t look right.</span>'; return; }
   const c={key:fixKey,field:w,value:v,note,by,resName:$('#fixFor').textContent.replace(/^For: /,'').split('. Your fix')[0],createdAt:new Date().toISOString()};
   try{ localStorage.setItem('navAdvocate',by); }catch(_){}
-  if(!DB){ addCorr(c); $('#fixDlg').close(); renderDir(); if(lastPlan.length) render(); toast('Updated here only. Enter the advocate passcode to save it for everyone.'); return; }
+  if(!DB){ addCorr(c); $('#fixDlg').close(); renderDir(); if(lastPlan.length) render(); toast('Updated here only. Check your internet and try again to save it for everyone.'); return; }
   try{ await DB.collection('corrections').add(c); $('#fixDlg').close(); toast('Resource info updated for everyone'); }
   catch(err){ $('#fixStatus').innerHTML=`<span class="bad">${err&&err.code==='invalid_argument'?'Your access doesn\'t allow adding. Enter the advocate passcode when asked.':err&&err.code==='no_db'?'Adding needs the advocate passcode.':'Couldn\'t add it just now. Try again in a moment.'}</span>`; }
 });
@@ -3678,7 +3679,7 @@ $('#btnSave').addEventListener('click',async()=>{
     try{ await MCP.callTool('Airtable','create_records_for_table',{baseId:AT.base,tableId:AT.table,records:[{fields:airtableFields(h)}],typecast:true});
       airtableSent=true; out.push(['ok','Intake saved.']); }
     catch(err){ const c=err&&err.code,m={
-      needs_pass:'Not saved: enter the advocate passcode when asked, then press Save again.',server_not_connected:'Not saved: saving isn\'t set up on the server yet. Tell Jason.',
+      needs_pass:'Not saved. Try again in a moment.',server_not_connected:'Not saved: saving isn\'t set up on the server yet. Tell Jason.',
       needs_reauth:'Not saved: the connection expired. Tell Jason.',
       approval_required:'Not saved: permission is needed. Tell Jason.',
       not_in_manifest:'Not saved: saving is turned off for this page.',
@@ -3815,7 +3816,7 @@ async function sendMail(tool){
       ? [['ok',`Sent from the DRR Navigator Gmail to ${input.to.join(', ')} with ${pdfName(h,mode)} attached. Check your Gmail Sent folder to confirm.`]]
       : [['ok','Draft saved in Gmail with the PDF attached.'],['info','Open Gmail › Drafts to review and send it.']]);
   }catch(err){ const c=err&&err.code, m={
-    needs_pass:'Enter the advocate passcode when asked to send email, or use Download PDF.',server_not_connected:'Email isn\'t set up yet. Use Download PDF.',
+    needs_pass:'Couldn\'t send just now. Try again, or use Download PDF.', too_many:'Today\'s email limit was reached. Use Download PDF and attach it to an email yourself.',server_not_connected:'Email isn\'t set up yet. Use Download PDF.',
     needs_reauth:'Your Gmail connection expired. Reconnect it in claude.ai Settings › Connectors.',
     approval_required:'Sending needs your OK. Open this page in claude.ai and allow Gmail when asked.',
     not_in_manifest:'Gmail was turned off for this page. Turn it back on from the page\'s connector settings.',
@@ -3887,6 +3888,9 @@ $('#copyFb').addEventListener('click',()=>{const t=$('#fbText').value.trim();if(
 })();
 </script>
 <script src="data211.js"></script>
-<script>try{ if(typeof renderDir==='function') renderDir(); }catch(e){}</script>
+<script>try{ if(typeof renderDir==='function') renderDir(); }catch(e){}
+/* No passcode (2026-11-12): the backend no longer checks one, so never ask. */
+window.__navAskPass=()=>{};
+</script>
 </body>
 </html>
